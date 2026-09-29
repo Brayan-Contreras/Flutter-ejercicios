@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: App()));
+  runApp(MaterialApp(home: Semaforo()));
 }
 
-class App extends StatefulWidget {
-  const App({super.key});
+class Semaforo extends StatefulWidget {
+  const Semaforo({super.key});
 
   @override
-  State<App> createState() {
-    return _App();
-  }
+  State<Semaforo> createState() => _SemaforoState();
 }
 
-class _App extends State<App> {
-  bool carga = false;
+class _SemaforoState extends State<Semaforo> {
+  /*Color rojo = Color.fromARGB(255, 255, 0, 0);
+  Color verde = Color.fromARGB(255, 0, 255, 0);
+  Color amarillo = Color.fromARGB(255, 255, 255, 0);
+  bool switchColor = true; */
+
+  int currentColorIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +26,40 @@ class _App extends State<App> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            carga
-                ? const CircularProgressIndicator()
-                : const Text('No hay carga'),
-            const SizedBox(height: 20),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: currentColorIndex == 0 ? Colors.red : Colors.grey,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: currentColorIndex == 1 ? Colors.yellow : Colors.grey,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: currentColorIndex == 2 ? Colors.green : Colors.grey,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 setState(() {
-                  carga = !carga;
-                });
-
-                await Future.delayed(const Duration(seconds: 2));
-
-                setState(() {
-                  carga = !carga;
+                  currentColorIndex = (currentColorIndex + 1) % 3;
                 });
               },
-              child: const Text('Cambiar estado'),
+              child: Text('Cambiar Color'),
             ),
           ],
         ),
