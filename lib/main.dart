@@ -12,57 +12,46 @@ class Semaforo extends StatefulWidget {
 }
 
 class _SemaforoState extends State<Semaforo> {
-  /*Color rojo = Color.fromARGB(255, 255, 0, 0);
-  Color verde = Color.fromARGB(255, 0, 255, 0);
-  Color amarillo = Color.fromARGB(255, 255, 255, 0);
-  bool switchColor = true; */
-
+  List<Color> colores = [Colors.red, Colors.yellow, Colors.green];
   int currentColorIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: currentColorIndex == 0 ? Colors.red : Colors.grey,
-                shape: BoxShape.circle,
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: currentColorIndex == 1 ? Colors.yellow : Colors.grey,
-                shape: BoxShape.circle,
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: currentColorIndex == 2 ? Colors.green : Colors.grey,
-                shape: BoxShape.circle,
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  currentColorIndex = (currentColorIndex + 1) % 3;
-                });
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: colores.length,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: index == currentColorIndex
+                            ? colores[index]
+                            : Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                );
               },
-              child: Text('Cambiar Color'),
             ),
-          ],
-        ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                currentColorIndex = (currentColorIndex + 1) % colores.length;
+              });
+            },
+            child: Text('Cambiar Color'),
+          ),
+        ],
       ),
     );
   }
