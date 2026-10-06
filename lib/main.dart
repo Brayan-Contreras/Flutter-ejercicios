@@ -12,6 +12,39 @@ class Borrar extends StatefulWidget {
 }
 
 class _BorrarState extends State<Borrar> {
+  void _mostrarDialogoConfirmacion(BuildContext context, {required int index}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Confirmar"),
+          content: const Text("¿Seguro que quieres borrar?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Cierra el diálogo sin hacer nada
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Ejecuta la acción de borrado
+                // Por ejemplo, borra el primer elemento
+                setState(() {
+                  items.removeAt(
+                    index,
+                  ); // Borra el elemento en la posición index
+                });
+                Navigator.pop(context); // Cierra el diálogo
+              },
+              child: const Text("Sí"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<String> items = ["Uno", "Dos", "Tres", "Cuatro", "Cinco"];
 
   @override
@@ -28,9 +61,10 @@ class _BorrarState extends State<Borrar> {
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      setState(() {
-                        items.removeAt(index);
-                      });
+                      _mostrarDialogoConfirmacion(
+                        context,
+                        index: index,
+                      ); // Muestra el diálogo de confirmación
                     },
                   ),
                 );
