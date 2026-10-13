@@ -12,6 +12,8 @@ class Borrar extends StatefulWidget {
 }
 
 class _BorrarState extends State<Borrar> {
+  final TextEditingController _controller = TextEditingController();
+
   void _mostrarDialogoConfirmacion(BuildContext context, {required int index}) {
     showDialog(
       context: context,
@@ -70,6 +72,29 @@ class _BorrarState extends State<Borrar> {
                 );
               },
             ),
+          ),
+
+          SizedBox(height: 20),
+
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              labelText: "Ingrese un nuevo elemento",
+            ),
+          ),
+
+          SizedBox(height: 20),
+
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                items.add(
+                  _controller.text,
+                ); // Agrega un nuevo elemento a la lista
+                _controller.clear(); // Limpia el campo de texto
+              });
+            },
+            child: const Text("Agregar Elementos"),
           ),
         ],
       ),
