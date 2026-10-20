@@ -1,102 +1,61 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: Borrar()));
+  runApp(MaterialApp(home: Textfil()));
 }
 
-class Borrar extends StatefulWidget {
-  const Borrar({super.key});
+class Textfil extends StatefulWidget {
+  const Textfil({super.key});
 
   @override
-  State<Borrar> createState() => _BorrarState();
+  State<Textfil> createState() => _TextfilState();
 }
 
-class _BorrarState extends State<Borrar> {
+List<String> items = ["Item 1", "Item 2", "Item 3"];
+
+class _TextfilState extends State<Textfil> {
+  bool mostrarCampo = false;
   final TextEditingController _controller = TextEditingController();
-
-  void _mostrarDialogoConfirmacion(BuildContext context, {required int index}) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Confirmar"),
-          content: const Text("¿Seguro que quieres borrar?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Cierra el diálogo sin hacer nada
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () {
-                // Ejecuta la acción de borrado
-                // Por ejemplo, borra el primer elemento
-                setState(() {
-                  items.removeAt(
-                    index,
-                  ); // Borra el elemento en la posición index
-                });
-                Navigator.pop(context); // Cierra el diálogo
-              },
-              child: const Text("Sí"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  List<String> items = ["Uno", "Dos", "Tres", "Cuatro", "Cinco"];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
               itemCount: items.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(items[index]),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      _mostrarDialogoConfirmacion(
-                        context,
-                        index: index,
-                      ); // Muestra el diálogo de confirmación
-                    },
-                  ),
-                );
+                return ListTile(title: Text(items[index]));
               },
             ),
-          ),
 
-          SizedBox(height: 20),
+            SizedBox(
+              height: 20,
+            ), // Espacio entre la lista y el botón/campo de texto
 
-          TextField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              labelText: "Ingrese un nuevo elemento",
-            ),
-          ),
-
-          SizedBox(height: 20),
-
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                items.add(
-                  _controller.text,
-                ); // Agrega un nuevo elemento a la lista
-                _controller.clear(); // Limpia el campo de texto
-              });
-            },
-            child: const Text("Agregar Elementos"),
-          ),
-        ],
+            mostrarCampo
+                ? TextField(
+                    controller: _controller,
+                    onSubmitted: (valor) {
+                      setState(() {
+                        items.add(valor);
+                        _controller.clear();
+                        mostrarCampo = false; // vuelve a mostrar el botón
+                      });
+                    },
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        mostrarCampo = true; // ahora se dibuja el TextField
+                      });
+                    },
+                    child: const Text("Agregar"),
+                  ),
+          ],
+        ),
       ),
     );
   }
