@@ -1,59 +1,49 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: Textfil()));
+  runApp(MaterialApp(home: Interruptor()));
 }
 
-class Textfil extends StatefulWidget {
-  const Textfil({super.key});
+class Interruptor extends StatefulWidget {
+  const Interruptor({super.key});
 
   @override
-  State<Textfil> createState() => _TextfilState();
+  _InterruptorState createState() {
+    return _InterruptorState();
+  }
 }
 
-List<String> items = ["Item 1", "Item 2", "Item 3"];
+class _InterruptorState extends State<Interruptor> {
+  bool Encendido = false;
 
-class _TextfilState extends State<Textfil> {
-  bool mostrarCampo = false;
-  final TextEditingController _controller = TextEditingController();
+  void _toggleSwitch() {
+    setState(() {
+      Encendido = !Encendido;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Encendido ? Colors.grey[300] : Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return ListTile(title: Text(items[index]));
+            Text(Encendido ? 'ON' : 'OFF', style: TextStyle(fontSize: 32)),
+            SizedBox(height: 20),
+            Icon(
+              Encendido ? Icons.lightbulb : Icons.lightbulb_outline,
+              size: 100,
+              color: Encendido ? Colors.yellow : Colors.white,
+            ),
+            SizedBox(height: 20),
+            Switch(
+              value: Encendido,
+              onChanged: (value) {
+                _toggleSwitch();
               },
             ),
-
-            SizedBox(
-              height: 20,
-            ), // Espacio entre la lista y el botón/campo de texto
-
-            mostrarCampo
-                ? TextField(
-                    controller: _controller,
-                    onSubmitted: (valor) {
-                      setState(() {
-                        items.add(valor);
-                        _controller.clear();
-                        mostrarCampo = false; // vuelve a mostrar el botón
-                      });
-                    },
-                  )
-                : ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        mostrarCampo = true; // ahora se dibuja el TextField
-                      });
-                    },
-                    child: const Text("Agregar"),
-                  ),
           ],
         ),
       ),
