@@ -1,49 +1,41 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: Interruptor()));
+  runApp(MaterialApp(home: Slidder()));
 }
 
-class Interruptor extends StatefulWidget {
-  const Interruptor({super.key});
+class Slidder extends StatefulWidget {
+  const Slidder({super.key});
 
   @override
-  _InterruptorState createState() {
-    return _InterruptorState();
-  }
+  State<Slidder> createState() => _SlidderState();
 }
 
-class _InterruptorState extends State<Interruptor> {
-  bool Encendido = false;
-
-  void _toggleSwitch() {
-    setState(() {
-      Encendido = !Encendido;
-    });
-  }
+class _SlidderState extends State<Slidder> {
+  double _value = 20.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Encendido ? Colors.grey[300] : Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(Encendido ? 'ON' : 'OFF', style: TextStyle(fontSize: 32)),
-            SizedBox(height: 20),
-            Icon(
-              Encendido ? Icons.lightbulb : Icons.lightbulb_outline,
-              size: 100,
-              color: Encendido ? Colors.yellow : Colors.white,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Slider(
+                value: _value,
+                min: 20,
+                max: 200,
+                label: _value.round().toString(),
+                onChanged: (double newValue) {
+                  setState(() {
+                    _value = newValue;
+                  });
+                },
+              ),
             ),
-            SizedBox(height: 20),
-            Switch(
-              value: Encendido,
-              onChanged: (value) {
-                _toggleSwitch();
-              },
-            ),
+            Icon(Icons.star, color: Colors.yellow, size: _value),
           ],
         ),
       ),
