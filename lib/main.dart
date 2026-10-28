@@ -1,43 +1,85 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: Slidder()));
+  runApp(MaterialApp(home: Mezclador()));
 }
 
-class Slidder extends StatefulWidget {
-  const Slidder({super.key});
+class Mezclador extends StatefulWidget {
+  const Mezclador({super.key});
 
   @override
-  State<Slidder> createState() => _SlidderState();
+  _MezcladorState createState() {
+    return _MezcladorState();
+  }
 }
 
-class _SlidderState extends State<Slidder> {
-  double _value = 20.0;
+class _MezcladorState extends State<Mezclador> {
+  double rojo = 0.0;
+  double verde = 0.0;
+  double azul = 0.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Slider(
-                value: _value,
-                min: 20,
-                max: 200,
-                label: _value.round().toString(),
-                onChanged: (double newValue) {
-                  setState(() {
-                    _value = newValue;
-                  });
-                },
-              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Slider(
+              value: rojo,
+              min: 0.0,
+              max: 255.0,
+              onChanged: (double valor) {
+                setState(() {
+                  rojo = valor;
+                });
+              },
             ),
-            Icon(Icons.star, color: Colors.yellow, size: _value),
-          ],
-        ),
+          ),
+          Text('Rojo: ${rojo.toInt()}'),
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Slider(
+              value: verde,
+              min: 0.0,
+              max: 255.0,
+              onChanged: (double valor) {
+                setState(() {
+                  verde = valor;
+                });
+              },
+            ),
+          ),
+          Text('Verde: ${verde.toInt()}'),
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Slider(
+              value: azul,
+              min: 0.0,
+              max: 255.0,
+              onChanged: (double valor) {
+                setState(() {
+                  azul = valor;
+                });
+              },
+            ),
+          ),
+          Text('Azul: ${azul.toInt()}'),
+          SizedBox(height: 20),
+          Container(
+            width: 200,
+            height: 200,
+            color: Color.fromARGB(
+              255,
+              rojo.toInt(),
+              verde.toInt(),
+              azul.toInt(),
+            ),
+          ),
+        ],
       ),
     );
   }
