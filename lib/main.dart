@@ -1,48 +1,28 @@
 import 'package:flutter/material.dart';
-import 'segundaPantalla.dart';
 
 void main() {
-  runApp(MaterialApp(home: EdSegPAntalla()));
+  runApp(MaterialApp(home: MapScreen()));
 }
 
-class EdSegPAntalla extends StatefulWidget {
-  const EdSegPAntalla({super.key});
+List<String> locations = [
+  'Location 1',
+  'Location 2',
+  'Location 3',
+  'Location 4',
+  'Location 5',
+];
 
-  @override
-  State<EdSegPAntalla> createState() => _EdSegPAntallaState();
-}
+class MapScreen extends StatelessWidget {
+  const MapScreen({super.key});
 
-List<String> items = ['Item 1', 'Item 2', 'Item 3'];
-
-class _EdSegPAntallaState extends State<EdSegPAntalla> {
-  String? resultado;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(items[index]),
-              trailing: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  final resultado = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SegundaPantalla(item: items[index]),
-                    ),
-                  );
-                  if (resultado != null) {
-                    setState(() {
-                      items[index] = resultado as String;
-                    });
-                  }
-                },
-              ),
-            );
-          },
+        child: Column(
+          children: [
+            ...locations.map((location) => ListTile(title: Text(location))),
+          ],
         ),
       ),
     );
