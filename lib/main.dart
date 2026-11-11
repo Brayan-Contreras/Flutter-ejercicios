@@ -1,78 +1,49 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(home: login()));
+  runApp(MaterialApp(home: JJSon()));
 }
 
-class login extends StatefulWidget {
-  const login({super.key});
+class Lugar {
+  String nombre;
+  double latitud;
+  double longitud;
+
+  Lugar.fromJson(Map<String, dynamic> json)
+    : nombre = json['nombre'],
+      latitud = json['latitud'],
+      longitud = json['longitud'];
+}
+
+class JJSon extends StatefulWidget {
+  const JJSon({super.key});
 
   @override
-  State<login> createState() => _loginState();
+  State<JJSon> createState() => _JJSonState();
 }
 
-class _loginState extends State<login> {
-  final _formKey = GlobalKey<FormState>();
-  String? error;
+List<Map<String, dynamic>> datos = [
+  {'nombre': 'Parque Central', 'latitud': 40.7128, 'longitud': -74.0060},
+  {'nombre': 'Plaza', 'latitud': 7.3756, 'longitud': -72.6479},
+];
+
+class _JJSonState extends State<JJSon> {
   @override
   Widget build(BuildContext context) {
+    final lugares = datos.map((d) => Lugar.fromJson(d)).toList();
     return Scaffold(
       body: Center(
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Nombre'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        error = 'Por favor ingresa tu nombre';
-                        return error;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Correo'),
-                    validator: (value) {
-                      if (value == null || value.contains('@') == false) {
-                        error = 'Por favor ingresa tu correo válido';
-                        return error;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Contraseña'),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.trim().length < 6) {
-                        error =
-                            'Por favor ingresa una contraseña de al menos 6 caracteres';
-                        return error;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Registro exitoso')),
-                        );
-                      }
-                    },
-                    child: Text('Registrarme'),
-                  ),
-                ],
+        child: ListView.builder(
+          itemCount: lugares.length,
+          itemBuilder: (context, index) {
+            final lugar = lugares[index];
+            return ListTile(
+              title: Text(lugar.nombre),
+              subtitle: Text(
+                'Latitud: ${lugar.latitud}, Longitud: ${lugar.longitud}',
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
