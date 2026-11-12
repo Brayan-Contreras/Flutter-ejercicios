@@ -13,6 +13,10 @@ class Lugar {
     : nombre = json['nombre'],
       latitud = json['latitud'],
       longitud = json['longitud'];
+
+  Map<String, dynamic> toJson() {
+    return {'nombre': nombre, 'latitud': latitud, 'longitud': longitud};
+  }
 }
 
 class JJSon extends StatefulWidget {
@@ -22,25 +26,26 @@ class JJSon extends StatefulWidget {
   State<JJSon> createState() => _JJSonState();
 }
 
-List<Map<String, dynamic>> datos = [
-  {'nombre': 'Parque Central', 'latitud': 40.7128, 'longitud': -74.0060},
-  {'nombre': 'Plaza', 'latitud': 7.3756, 'longitud': -72.6479},
-];
+Map<String, dynamic> datos = {
+  'nombre': 'Parque Central',
+  'latitud': 40.7128,
+  'longitud': -74.0060,
+};
 
 class _JJSonState extends State<JJSon> {
   @override
   Widget build(BuildContext context) {
-    final lugares = datos.map((d) => Lugar.fromJson(d)).toList();
+    final lugar = Lugar.fromJson(datos);
+    final mapa = lugar.toJson();
     return Scaffold(
       body: Center(
         child: ListView.builder(
-          itemCount: lugares.length,
+          itemCount: 1,
           itemBuilder: (context, index) {
-            final lugar = lugares[index];
             return ListTile(
               title: Text(lugar.nombre),
               subtitle: Text(
-                'Latitud: ${lugar.latitud}, Longitud: ${lugar.longitud}',
+                'Latitud: ${mapa['latitud']}, Longitud: ${mapa['longitud']}',
               ),
             );
           },
