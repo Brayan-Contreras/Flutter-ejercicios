@@ -1,53 +1,59 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 void main() {
-  runApp(MaterialApp(home: JJSon()));
+  runApp(MaterialApp(home: FutureB()));
+}
+
+class FutureB extends StatefulWidget {
+  const FutureB({super.key});
+
+  @override
+  State<FutureB> createState() => _FutureBState();
 }
 
 class Lugar {
   String nombre;
   double latitud;
   double longitud;
+  Lugar({required this.nombre, required this.latitud, required this.longitud});
 
   Lugar.fromJson(Map<String, dynamic> json)
     : nombre = json['nombre'],
       latitud = json['latitud'],
       longitud = json['longitud'];
-
-  Map<String, dynamic> toJson() {
-    return {'nombre': nombre, 'latitud': latitud, 'longitud': longitud};
-  }
 }
 
-class JJSon extends StatefulWidget {
-  const JJSon({super.key});
+const textoJson =
+    '{"nombre": "Catedral de Pamplona", "latitud": 7.3756, "longitud": -72.6479}';
 
-  @override
-  State<JJSon> createState() => _JJSonState();
-}
-
-Map<String, dynamic> datos = {
-  'nombre': 'Parque Central',
-  'latitud': 40.7128,
-  'longitud': -74.0060,
-};
-
-class _JJSonState extends State<JJSon> {
+class _FutureBState extends State<FutureB> {
   @override
   Widget build(BuildContext context) {
-    final lugar = Lugar.fromJson(datos);
-    final mapa = lugar.toJson();
     return Scaffold(
       body: Center(
-        child: ListView.builder(
-          itemCount: 1,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(lugar.nombre),
-              subtitle: Text(
-                'Latitud: ${mapa['latitud']}, Longitud: ${mapa['longitud']}',
-              ),
-            );
+        child: FutureBuilder(
+          future: Future.delayed(const Duration(seconds: 3), () {
+            final Map<String, dynamic> mapa = jsonDecode(textoJson);
+            final lugar = Lugar.fromJson(mapa);
+            return lugar;
+          }),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final lugar = snapshot.data!;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Nombre: ${lugar.nombre}'),
+                  Text('Latitud: ${lugar.latitud}'),
+                  Text('Longitud: ${lugar.longitud}'),
+                ],
+              );
+            }
           },
         ),
       ),
