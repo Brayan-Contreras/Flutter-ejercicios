@@ -28,16 +28,28 @@ const textoJson =
     '{"nombre": "Catedral de Pamplona", "latitud": 7.3756, "longitud": -72.6479}';
 
 class _FutureBState extends State<FutureB> {
+  late Future<Lugar> _futuro;
+
+  @override
+  void initState() {
+    super.initState();
+    _futuro = cargarLugar();
+  }
+
+  Future<Lugar> cargarLugar() async {
+    await Future.delayed(const Duration(seconds: 3));
+    final Map<String, dynamic> mapa = jsonDecode(textoJson);
+    final lugar = Lugar.fromJson(mapa);
+    return lugar;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: Future.delayed(const Duration(seconds: 3), () {
-            final Map<String, dynamic> mapa = jsonDecode(textoJson);
-            final lugar = Lugar.fromJson(mapa);
-            return lugar;
-          }),
+          future:
+              _futuro, // (_futuro) Llamada a la función cargarLugar() que puedes reemplazar en initState si deseas mantener el mismo Future
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -51,6 +63,12 @@ class _FutureBState extends State<FutureB> {
                   Text('Nombre: ${lugar.nombre}'),
                   Text('Latitud: ${lugar.latitud}'),
                   Text('Longitud: ${lugar.longitud}'),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: Text('Redibujar'),
+                  ),
                 ],
               );
             }
