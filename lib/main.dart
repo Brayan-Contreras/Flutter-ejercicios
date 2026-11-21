@@ -1,80 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-void main() {
-  runApp(MaterialApp(home: FutureB()));
-}
-
-class FutureB extends StatefulWidget {
-  const FutureB({super.key});
-
-  @override
-  State<FutureB> createState() => _FutureBState();
-}
-
-class Lugar {
-  String nombre;
-  double latitud;
-  double longitud;
-  Lugar({required this.nombre, required this.latitud, required this.longitud});
-
-  Lugar.fromJson(Map<String, dynamic> json)
-    : nombre = json['nombre'],
-      latitud = json['latitud'],
-      longitud = json['longitud'];
-}
-
-const textoJson =
-    '{"nombre": "Catedral de Pamplona", "latitud": 7.3756, "longitud": -72.6479}';
-
-class _FutureBState extends State<FutureB> {
-  late Future<Lugar> _futuro;
-
-  @override
-  void initState() {
-    super.initState();
-    _futuro = cargarLugar();
-  }
-
-  Future<Lugar> cargarLugar() async {
-    await Future.delayed(const Duration(seconds: 3));
-    final Map<String, dynamic> mapa = jsonDecode(textoJson);
-    final lugar = Lugar.fromJson(mapa);
-    return lugar;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future:
-              _futuro, // (_futuro) Llamada a la función cargarLugar() que puedes reemplazar en initState si deseas mantener el mismo Future
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              final lugar = snapshot.data!;
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Nombre: ${lugar.nombre}'),
-                  Text('Latitud: ${lugar.latitud}'),
-                  Text('Longitud: ${lugar.longitud}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: Text('Redibujar'),
-                  ),
-                ],
-              );
-            }
-          },
-        ),
-      ),
-    );
-  }
+void main() async {
+  final respuesta = await http.get(
+    Uri.parse('https://jsonplaceholder.typicode.com/todos/1'),
+  );
+  print(respuesta.statusCode);
+  print(respuesta.body);
 }
